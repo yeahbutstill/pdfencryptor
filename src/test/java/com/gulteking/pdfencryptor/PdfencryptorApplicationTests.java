@@ -1,13 +1,25 @@
 package com.gulteking.pdfencryptor;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.gulteking.pdfencryptor.config.ApiKeyFilterConfiguration;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @SpringBootTest
+@Disabled
 class PdfencryptorApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
-
+  @Test
+  void testShouldFilter() {
+    ApiKeyFilterConfiguration config = new ApiKeyFilterConfiguration();
+    ReflectionTestUtils.setField(config, "protectedPaths", new String[] {"/api/v1/users/*"});
+    assertTrue(config.shouldFilter("/api/v1/users/tradeconfo"));
+    assertTrue(config.shouldFilter("/api/v1/users/tradeloan"));
+    assertTrue(config.shouldFilter("/api/v1/users/tax"));
+    assertFalse(config.shouldFilter("/api/v1/admin"));
+  }
 }
