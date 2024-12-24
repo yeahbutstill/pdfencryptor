@@ -36,7 +36,4 @@ mvnw
 mvnw.cmd
 
 ### Jangan ###
-compose.yaml
-withpostgresql.txt
-/src/main/resources/env.properties
-/src/main/resources/db/migration/V1.0.0.2024121801__Skema Awal.sql
+/src/main/resources/db/migration/**
