@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Slf4j
 public class PdfImpl {
+  private static final String FNE = "File must not be null or empty.";
+  private static final String FNAMENE = "File name cannot be null or empty.";
+
   private TradeConfoUserRepository tradeConfoUserRepository;
   private TradeLoanUserRepository tradeLoanUserRepository;
   private TaxUserRepository taxUserRepository;
@@ -41,12 +44,12 @@ public class PdfImpl {
       MultipartFile file, String depositoNumber) {
     // Validasi input
     if (file == null || file.isEmpty()) {
-      throw new IllegalArgumentException("File must not be null or empty.");
+      throw new IllegalArgumentException(FNE);
     }
 
     String fileName = file.getOriginalFilename();
     if (fileName == null || fileName.trim().isEmpty()) {
-      throw new IllegalArgumentException("File name cannot be null or empty.");
+      throw new IllegalArgumentException(FNAMENE);
     }
 
     if (depositoNumber == null || !depositoNumber.matches("\\d{12}")) {
@@ -84,12 +87,12 @@ public class PdfImpl {
   public UserTradeLoanResponse generatePasswordPdfLoan(MultipartFile file, String cif) {
     // Validasi input
     if (file == null || file.isEmpty()) {
-      throw new IllegalArgumentException("File must not be null or empty.");
+      throw new IllegalArgumentException(FNE);
     }
 
     String fileName = file.getOriginalFilename();
     if (fileName == null || fileName.trim().isEmpty()) {
-      throw new IllegalArgumentException("File name cannot be null or empty.");
+      throw new IllegalArgumentException(FNE);
     }
 
     if (cif == null || !cif.matches("\\d{6}")) {
@@ -125,12 +128,12 @@ public class PdfImpl {
   public UserTaxResponse generatePasswordPdfTax(MultipartFile file, String npwp) {
     // Validasi input
     if (file == null || file.isEmpty()) {
-      throw new IllegalArgumentException("File must not be null or empty.");
+      throw new IllegalArgumentException(FNE);
     }
 
     String fileName = file.getOriginalFilename();
     if (fileName == null || fileName.trim().isEmpty()) {
-      throw new IllegalArgumentException("File name cannot be null or empty.");
+      throw new IllegalArgumentException(FNE);
     }
 
     if (npwp == null || !npwp.matches("\\d{15}")) {

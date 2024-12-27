@@ -13,7 +13,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "api_keys")
-public class ApiKeyEntity extends AuditTableEntity<Long> {
+public class ApiKeys extends AuditTable<Long> {
 
   @Column(unique = true, nullable = false)
   private String apiKey;

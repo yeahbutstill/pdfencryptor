@@ -15,7 +15,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "trade_confo_users")
-public class TradeConfoUsers extends AuditTableEntity<Long> {
+public class TradeConfoUsers extends AuditTable<Long> {
 
   @NotBlank
   @Pattern(regexp = "\\d{12}", message = "Deposit Number must be exactly 12 digits")

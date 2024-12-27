@@ -15,7 +15,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "tax_users")
-public class TaxUsers extends AuditTableEntity<Long> {
+public class TaxUsers extends AuditTable<Long> {
 
   @NotBlank
   @Pattern(regexp = "\\d{15}", message = "NPWP must be exactly 15 digits")

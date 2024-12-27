@@ -28,6 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class PdfToFolderImpl implements PdfEncryptorService {
 
+  private static final String INVALIDPATHFOLDER = "Invalid save folder path";
+  private static final String CREATESAVEFOLDER = "Created save folder: {}";
+  private static final String SAVEFOLDER = "Save folder is not a writable directory";
+  private static final String FAILEDTOCREATE = "Failed to create or validate save folder: {}";
+  private static final String EPDF = "Exception occurred while encrypting PDF";
+  private static final String ENCRYPTEDS = "encrypted_%s";
+  private static final String ENCRYPTEDSAVETO = "Encrypted PDF saved to: {}";
+
   @Value("${pdf.key.length}")
   private int keyLength;
 
@@ -49,13 +57,13 @@ public class PdfToFolderImpl implements PdfEncryptorService {
     try {
       if (!Files.exists(savePath)) {
         Files.createDirectories(savePath);
-        log.info("Created save folder: {}", savePath.toAbsolutePath());
+        log.info(CREATESAVEFOLDER, savePath.toAbsolutePath());
       } else if (!Files.isDirectory(savePath) || !Files.isWritable(savePath)) {
-        throw new IllegalStateException("Save folder is not a writable directory");
+        throw new IllegalStateException(SAVEFOLDER);
       }
     } catch (IOException ex) {
-      log.error("Failed to create or validate save folder: {}", savePath.toAbsolutePath(), ex);
-      throw new IllegalStateException("Invalid save folder path", ex);
+      log.error(FAILEDTOCREATE, savePath.toAbsolutePath(), ex);
+      throw new IllegalStateException(INVALIDPATHFOLDER, ex);
     }
   }
 
@@ -65,13 +73,13 @@ public class PdfToFolderImpl implements PdfEncryptorService {
     try {
       if (!Files.exists(savePath)) {
         Files.createDirectories(savePath);
-        log.info("Created save folder: {}", savePath.toAbsolutePath());
+        log.info(CREATESAVEFOLDER, savePath.toAbsolutePath());
       } else if (!Files.isDirectory(savePath) || !Files.isWritable(savePath)) {
-        throw new IllegalStateException("Save folder is not a writable directory");
+        throw new IllegalStateException(SAVEFOLDER);
       }
     } catch (IOException ex) {
-      log.error("Failed to create or validate save folder: {}", savePath.toAbsolutePath(), ex);
-      throw new IllegalStateException("Invalid save folder path", ex);
+      log.error(FAILEDTOCREATE, savePath.toAbsolutePath(), ex);
+      throw new IllegalStateException(INVALIDPATHFOLDER, ex);
     }
   }
 
@@ -81,13 +89,13 @@ public class PdfToFolderImpl implements PdfEncryptorService {
     try {
       if (!Files.exists(savePath)) {
         Files.createDirectories(savePath);
-        log.info("Created save folder: {}", savePath.toAbsolutePath());
+        log.info(CREATESAVEFOLDER, savePath.toAbsolutePath());
       } else if (!Files.isDirectory(savePath) || !Files.isWritable(savePath)) {
-        throw new IllegalStateException("Save folder is not a writable directory");
+        throw new IllegalStateException(SAVEFOLDER);
       }
     } catch (IOException ex) {
-      log.error("Failed to create or validate save folder: {}", savePath.toAbsolutePath(), ex);
-      throw new IllegalStateException("Invalid save folder path", ex);
+      log.error(FAILEDTOCREATE, savePath.toAbsolutePath(), ex);
+      throw new IllegalStateException(INVALIDPATHFOLDER, ex);
     }
   }
 
@@ -109,12 +117,11 @@ public class PdfToFolderImpl implements PdfEncryptorService {
       doc.close();
 
       // Save encrypted PDF to folder
-      String savedFilePath = saveEncryptedPdfConfo(file.getOriginalFilename(), baos.toByteArray());
-
-      return savedFilePath;
+      return saveEncryptedPdfConfo(file.getOriginalFilename(), baos.toByteArray());
     } catch (Exception ex) {
-      log.error("Exception occurred while encrypting PDF", ex);
-      throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
+      log.error(EPDF, ex);
+      throw new PdfException(ex.getMessage());
+      //      throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
     }
   }
 
@@ -136,11 +143,9 @@ public class PdfToFolderImpl implements PdfEncryptorService {
       doc.close();
 
       // Save encrypted PDF to folder
-      String savedFilePath = saveEncryptedPdfLoan(file.getOriginalFilename(), baos.toByteArray());
-
-      return savedFilePath;
+      return saveEncryptedPdfLoan(file.getOriginalFilename(), baos.toByteArray());
     } catch (Exception ex) {
-      log.error("Exception occurred while encrypting PDF", ex);
+      log.error(EPDF, ex);
       throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
     }
   }
@@ -163,57 +168,55 @@ public class PdfToFolderImpl implements PdfEncryptorService {
       doc.close();
 
       // Save encrypted PDF to folder
-      String savedFilePath = saveEncryptedPdfTax(file.getOriginalFilename(), baos.toByteArray());
-
-      return savedFilePath;
+      return saveEncryptedPdfTax(file.getOriginalFilename(), baos.toByteArray());
     } catch (Exception ex) {
-      log.error("Exception occurred while encrypting PDF", ex);
+      log.error(EPDF, ex);
       throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
     }
   }
 
-  private String saveEncryptedPdfConfo(String originalFilename, byte[] encryptedPdfBytes)
+  public String saveEncryptedPdfConfo(String originalFilename, byte[] encryptedPdfBytes)
       throws IOException {
     //    String timestamp = String.valueOf(System.currentTimeMillis());
     //    String encryptedFileName = String.format("encrypted_%s_%s", timestamp, originalFilename);
-    String encryptedFileName = String.format("encrypted_%s", originalFilename);
+    String encryptedFileName = String.format(ENCRYPTEDS, originalFilename);
     Path filePath = Paths.get(saveFolderConfo, encryptedFileName);
     try (BufferedOutputStream bos =
         new BufferedOutputStream(new FileOutputStream(filePath.toFile()))) {
       bos.write(encryptedPdfBytes);
     }
 
-    log.info("Encrypted PDF saved to: {}", filePath.toAbsolutePath());
+    log.info(ENCRYPTEDSAVETO, filePath.toAbsolutePath());
     return filePath.toString(); // Return the saved file path
   }
 
-  private String saveEncryptedPdfLoan(String originalFilename, byte[] encryptedPdfBytes)
+  public String saveEncryptedPdfLoan(String originalFilename, byte[] encryptedPdfBytes)
       throws IOException {
-    String encryptedFileName = String.format("encrypted_%s", originalFilename);
+    String encryptedFileName = String.format(ENCRYPTEDS, originalFilename);
     Path filePath = Paths.get(saveFolderLoan, encryptedFileName);
     try (BufferedOutputStream bos =
         new BufferedOutputStream(new FileOutputStream(filePath.toFile()))) {
       bos.write(encryptedPdfBytes);
     }
 
-    log.info("Encrypted PDF saved to: {}", filePath.toAbsolutePath());
+    log.info(ENCRYPTEDSAVETO, filePath.toAbsolutePath());
     return filePath.toString(); // Return the saved file path
   }
 
-  private String saveEncryptedPdfTax(String originalFilename, byte[] encryptedPdfBytes)
+  public String saveEncryptedPdfTax(String originalFilename, byte[] encryptedPdfBytes)
       throws IOException {
-    String encryptedFileName = String.format("encrypted_%s", originalFilename);
+    String encryptedFileName = String.format(ENCRYPTEDS, originalFilename);
     Path filePath = Paths.get(saveFolderTax, encryptedFileName);
     try (BufferedOutputStream bos =
         new BufferedOutputStream(new FileOutputStream(filePath.toFile()))) {
       bos.write(encryptedPdfBytes);
     }
 
-    log.info("Encrypted PDF saved to: {}", filePath.toAbsolutePath());
+    log.info(ENCRYPTEDSAVETO, filePath.toAbsolutePath());
     return filePath.toString(); // Return the saved file path
   }
 
-  private void validatePassword(String password) {
+  public void validatePassword(String password) {
     if (password == null || password.isEmpty()) {
       throw new PdfException("Password cannot be null or empty");
     }
@@ -240,7 +243,7 @@ public class PdfToFolderImpl implements PdfEncryptorService {
   @Override
   public void validatePdf(MultipartFile file) {
     String filename =
-        Optional.ofNullable(file)
+        Optional.of(file)
             .map(MultipartFile::getOriginalFilename)
             .orElseThrow(() -> new PdfException("File or filename is null"));
 
@@ -254,7 +257,7 @@ public class PdfToFolderImpl implements PdfEncryptorService {
     }
   }
 
-  private boolean isValidPdf(String filename) {
+  protected boolean isValidPdf(String filename) {
     return filename != null && (filename.endsWith(".pdf") || filename.endsWith(".PDF"));
   }
 }

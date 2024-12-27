@@ -15,7 +15,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "trade_loan_users")
-public class TradeLoanUsers extends AuditTableEntity<Long> {
+public class TradeLoanUsers extends AuditTable<Long> {
 
   @NotBlank
   @Pattern(regexp = "\\d{6}", message = "CIF must be exactly 6 numeric digits")

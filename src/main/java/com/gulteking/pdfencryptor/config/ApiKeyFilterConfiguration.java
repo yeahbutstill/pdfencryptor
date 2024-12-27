@@ -11,10 +11,10 @@ import org.springframework.util.AntPathMatcher;
 @Slf4j
 public class ApiKeyFilterConfiguration {
 
+  private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
   @Value("${api.key.protected.paths:/api/v1/users/*}")
   private String[] protectedPaths;
-
-  private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
   @PostConstruct
   public void validateAndLogProtectedPaths() {

@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @EntityListeners({AuditingEntityListener.class, UpdatedCreatedAtListener.class})
 // ini dimana T itu harus extends Serializable
-public abstract class AuditTableEntity<T extends Serializable> implements UpdatedCreatedAtAware {
+public abstract class AuditTable<T extends Serializable> implements UpdatedCreatedAtAware {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
