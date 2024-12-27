@@ -60,10 +60,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<Response<Object>> handleGenericException(Exception ex) {
     log.error("Unhandled Exception: {}", ex.getMessage(), ex);
-    return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, "Unhandled exception occurred");
+    return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, "Unhandled exception occurred");
   }
 
   private ResponseEntity<Response<Object>> buildErrorResponse(

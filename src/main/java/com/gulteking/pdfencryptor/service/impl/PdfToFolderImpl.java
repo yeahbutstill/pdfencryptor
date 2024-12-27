@@ -1,7 +1,5 @@
 package com.gulteking.pdfencryptor.service.impl;
 
-import com.gulteking.pdfencryptor.exception.ExceptionMessages;
-import com.gulteking.pdfencryptor.exception.InternalException;
 import com.gulteking.pdfencryptor.exception.PdfException;
 import com.gulteking.pdfencryptor.service.PdfEncryptorService;
 import java.io.BufferedOutputStream;
@@ -121,7 +119,6 @@ public class PdfToFolderImpl implements PdfEncryptorService {
     } catch (Exception ex) {
       log.error(EPDF, ex);
       throw new PdfException(ex.getMessage());
-      //      throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
     }
   }
 
@@ -146,7 +143,7 @@ public class PdfToFolderImpl implements PdfEncryptorService {
       return saveEncryptedPdfLoan(file.getOriginalFilename(), baos.toByteArray());
     } catch (Exception ex) {
       log.error(EPDF, ex);
-      throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
+      throw new PdfException(ex.getMessage());
     }
   }
 
@@ -171,7 +168,7 @@ public class PdfToFolderImpl implements PdfEncryptorService {
       return saveEncryptedPdfTax(file.getOriginalFilename(), baos.toByteArray());
     } catch (Exception ex) {
       log.error(EPDF, ex);
-      throw new InternalException(ExceptionMessages.UNHANDLED_EXCEPTION, ex);
+      throw new PdfException(ex.getMessage());
     }
   }
 
