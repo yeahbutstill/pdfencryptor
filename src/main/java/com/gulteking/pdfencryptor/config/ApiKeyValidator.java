@@ -6,16 +6,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiKeyValidator {
 
-  @Value("${api.key}")
-  private String validApiKey;
+    @Value("${api.key}")
+    private String validApiKey;
 
-  public void validateApiKey(String apiKey) {
-    if (apiKey == null || apiKey.isEmpty()) {
-      throw new IllegalArgumentException("API key is missing");
-    }
+    public void validateApiKey(String apiKey) {
+        if (apiKey == null || apiKey.isEmpty()) {
+            throw new IllegalArgumentException("API key is missing");
+        }
 
-    if (!apiKey.equals(validApiKey)) {
-      throw new SecurityException("Invalid API key");
+        if (!apiKey.equals(validApiKey)) {
+            throw new SecurityException("Invalid API key");
+        }
     }
-  }
 }

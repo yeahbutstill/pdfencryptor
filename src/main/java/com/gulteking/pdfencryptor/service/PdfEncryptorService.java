@@ -3,7 +3,7 @@ package com.gulteking.pdfencryptor.service;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PdfEncryptorService {
-  byte[] encryptPdf(MultipartFile file, String password);
+    byte[] encryptPdf(MultipartFile file, String password);
 
-  void validatePdf(MultipartFile file);
+    void validatePdf(MultipartFile file);
 }
