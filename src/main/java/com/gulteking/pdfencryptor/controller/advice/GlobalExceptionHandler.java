@@ -1,7 +1,7 @@
 package com.gulteking.pdfencryptor.controller.advice;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.yeahbutstill.hmacgenerator.model.HmacResponse;
+import com.gulteking.pdfencryptor.model.HmacResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

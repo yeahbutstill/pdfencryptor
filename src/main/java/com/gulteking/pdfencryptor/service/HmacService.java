@@ -8,5 +8,5 @@ public interface HmacService {
     String generateHmac(String secretKey, String isoTimestamp, String requestBody)
             throws NoSuchAlgorithmException, InvalidKeyException, IllegalArgumentException;
 
-    public Map<String, String> generateSignature(Map<String, Object> request) throws NoSuchAlgorithmException, InvalidKeyException;
+    Map<String, String> generateSignature(Map<String, Object> request) throws NoSuchAlgorithmException, InvalidKeyException;
 }
