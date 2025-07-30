@@ -1,44 +1,21 @@
 package com.gulteking.pdfencryptor.config;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.gulteking.pdfencryptor.exception.ExceptionMessages;
 import com.gulteking.pdfencryptor.exception.ExceptionModel;
+import com.gulteking.pdfencryptor.exception.GlobalException;
 import com.gulteking.pdfencryptor.exception.InternalException;
-import com.gulteking.pdfencryptor.exception.PdfException;
-import com.gulteking.pdfencryptor.model.HmacResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({NoSuchAlgorithmException.class, InvalidKeyException.class})
-    public ResponseEntity<HmacResponse> handleSecurityExceptions(Exception e) {
-        HmacResponse response = new HmacResponse("error", null, null, "Error generating HMAC: " + e.getMessage());
-        return ResponseEntity.status(400).body(response);
-    }
-
-    @ExceptionHandler({JsonMappingException.class, com.fasterxml.jackson.core.JsonProcessingException.class})
-    public ResponseEntity<HmacResponse> handleJsonProcessingException(Exception e) {
-        HmacResponse response = new HmacResponse("error", null, null, "Invalid JSON format: " + e.getMessage());
-        return ResponseEntity.status(400).body(response);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<HmacResponse> handleGenericException(Exception e) {
-        HmacResponse response = new HmacResponse("error", null, null, "Unexpected error: " + e.getMessage());
-        return ResponseEntity.status(500).body(response);
-    }
-
-    @ExceptionHandler(value = PdfException.class)
-    public ResponseEntity<ExceptionModel> pdfException(PdfException exception) {
+    @ExceptionHandler(value = GlobalException.class)
+    public ResponseEntity<ExceptionModel> pdfException(GlobalException exception) {
         log.error("PdfException", exception);
         return new ResponseEntity<>(toExceptionModel(exception), HttpStatus.BAD_REQUEST);
     }
@@ -49,7 +26,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(toExceptionModel(exception), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionModel> unhandledException(Exception exception) {
         log.error("Unhandled Exception", exception);
         ExceptionModel exceptionModel = toExceptionModel(exception);

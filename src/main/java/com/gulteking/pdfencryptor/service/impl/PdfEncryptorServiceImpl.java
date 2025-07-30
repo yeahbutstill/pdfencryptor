@@ -1,8 +1,8 @@
 package com.gulteking.pdfencryptor.service.impl;
 
 import com.gulteking.pdfencryptor.exception.ExceptionMessages;
+import com.gulteking.pdfencryptor.exception.GlobalException;
 import com.gulteking.pdfencryptor.exception.InternalException;
-import com.gulteking.pdfencryptor.exception.PdfException;
 import com.gulteking.pdfencryptor.service.PdfEncryptorService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -72,11 +72,11 @@ public class PdfEncryptorServiceImpl implements PdfEncryptorService {
                                 () -> new IllegalArgumentException("File atau nama file tidak boleh null"));
 
         if (filename.isEmpty()) {
-            throw new PdfException(ExceptionMessages.INVALID_FILE_NAME);
+            throw new GlobalException(ExceptionMessages.INVALID_FILE_NAME);
         }
 
         if (!filename.toLowerCase().endsWith(".pdf")) {
-            throw new PdfException(ExceptionMessages.INVALID_FILE_EXTENSION);
+            throw new GlobalException(ExceptionMessages.INVALID_FILE_EXTENSION);
         }
     }
 
