@@ -89,3 +89,20 @@ SELECT * FROM TAX_USERS;
 SELECT * FROM TRADE_CONFO_USERS;
 SELECT * FROM TRADE_LOAN_USERS;
 ```
+
+```curl
+curl --location 'http://localhost:8080/kofax-rpa-limitations/api/v1/hmac/generate-signature' \
+--header 'X-API-KEY: A95Jlwb3xfN7NGqhikavGZ5eyYCtcCXlDFvJNA1Ep6zuTKgqRH0pbRdjksoQLyj33StVx5GdhOQ52KmrbIZHbauJ208L9Qk8ayPTcPoixYCyPgi4d6YX7urYjO3ACcHJ' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "getAlertByIdentifier": {
+        "alertIdentifier": "WLF808-25384108-710815&~@!#$%^&*(){}+=|:'\''<>?/~`"
+    },
+    "sessionId": "JSESSIONID=NGpURYRU6VTT19QY6TXIaKeNcWmkz_U-ljsL4y13f0fSBGHbtYm7!868568294; path=/;SameSite=NONE; secure; HttpOnly"
+}'
+
+curl --location 'http://localhost:8080/kofax-rpa-limitations/api/v1/pdf/encrypt' \
+--header 'X-API-KEY: A95Jlwb3xfN7NGqhikavGZ5eyYCtcCXlDFvJNA1Ep6zuTKgqRH0pbRdjksoQLyj33StVx5GdhOQ52KmrbIZHbauJ208L9Qk8ayPTcPoixYCyPgi4d6YX7urYjO3ACcHJ' \
+--form 'file=@"/home/yeahbutstill/Downloads/BPJS.pdf"' \
+--form 'password="123456789112"'
+```
