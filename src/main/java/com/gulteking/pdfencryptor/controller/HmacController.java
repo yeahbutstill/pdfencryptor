@@ -1,14 +1,22 @@
 package com.gulteking.pdfencryptor.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gulteking.pdfencryptor.config.ApiKeyValidator;
-import com.gulteking.pdfencryptor.exception.GlobalException;
+import com.gulteking.pdfencryptor.dto.HmacResponse;
 import com.gulteking.pdfencryptor.service.HmacService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RestController
@@ -16,28 +24,38 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HmacController {
 
+    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     private final HmacService hmacService;
     private final ApiKeyValidator apiKeyValidator;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping("/generate-signature")
-    public ResponseEntity<Map<String, String>> generateSignature(
+    @PostMapping("/generate")
+    public ResponseEntity<HmacResponse> generateHmac(
             @RequestHeader(value = "X-API-KEY") String apiKey,
-            @RequestBody Map<String, Object> request) {
-        log.info("Received request to generate signature with API key: {}", apiKey);
+            @RequestHeader("X-SECRET-KEY") String secretKey,
+            @RequestBody JsonNode requestBodyJson) {
         try {
-            // Validate API key
             apiKeyValidator.validateApiKey(apiKey);
 
-            // Generate signature
-            Map<String, String> response = hmacService.generateSignature(request);
-            log.info("Successfully generated signature for request: {}", request);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException | SecurityException e) {
-            log.error("Validation error: {}", e.getMessage());
-            throw e; // Handled by GlobalExceptionHandler
-        } catch (Exception e) {
-            log.error("Error generating signature", e);
-            throw new GlobalException("Failed to generate signature: " + e.getMessage());
+            // Konversi JSON ke string untuk HMAC
+            String requestBody = objectMapper.writeValueAsString(requestBodyJson);
+
+            // Generate timestamp in ISO 8601 format (WIB)
+            String timestamp = ZonedDateTime.now(ZoneId.of("Asia/Jakarta")).format(ISO_FORMATTER);
+
+            // Generate HMAC using the JSON string
+            String hmac = hmacService.generateHmac(secretKey, timestamp, requestBody);
+
+            // Return response with provided and generated values
+            return ResponseEntity.ok(new HmacResponse("success", hmac, timestamp, null, requestBody));
+        } catch (IllegalArgumentException e) {
+            log.warn("Permintaan tidak valid: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(new HmacResponse("error", null, null, e.getMessage(), null));
+        } catch (NoSuchAlgorithmException | InvalidKeyException | JsonProcessingException e) {
+            log.error("Gagal menghasilkan HMAC atau JSON: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new HmacResponse("error", null, null, "Gagal menghasilkan HMAC atau JSON", null));
         }
     }
 }

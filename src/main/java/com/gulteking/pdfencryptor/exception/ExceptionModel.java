@@ -1,14 +1,11 @@
 package com.gulteking.pdfencryptor.exception;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
 public class ExceptionModel {
-
-    private String error;
-    private String errorDescription;
-    private String internalError;
-    private String internalErrorDescription;
+    String errorMessage;
+    String details;
 }
