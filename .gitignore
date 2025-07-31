@@ -38,3 +38,4 @@ mvnw.cmd
 ### Jangan ###
 /src/main/resources/db/migration/**
 /src/test/resources/**
+/src/main/resources/application.properties
