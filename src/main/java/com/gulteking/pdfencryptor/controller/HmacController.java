@@ -33,6 +33,7 @@ public class HmacController {
     public ResponseEntity<HmacResponse> generateHmac(
             @RequestHeader(value = "X-API-KEY") String apiKey,
             @RequestHeader("X-SECRET-KEY") String secretKey,
+            @RequestHeader("BDI-Timestamp") String BDITimestamp,
             @RequestBody JsonNode requestBodyJson) {
         try {
             apiKeyValidator.validateApiKey(apiKey);
@@ -44,7 +45,7 @@ public class HmacController {
             String timestamp = ZonedDateTime.now(ZoneId.of("Asia/Jakarta")).format(ISO_FORMATTER);
 
             // Generate HMAC using the JSON string
-            String hmac = hmacService.generateHmac(secretKey, timestamp, requestBody);
+            String hmac = hmacService.generateHmac(secretKey, BDITimestamp, requestBody);
 
             // Return response with provided and generated values
             return ResponseEntity.ok(new HmacResponse("success", hmac, timestamp, null, requestBody));
