@@ -42,13 +42,15 @@ public class HmacController {
             String requestBody = objectMapper.writeValueAsString(requestBodyJson);
 
             // Generate timestamp in ISO 8601 format (WIB)
-            String timestamp = ZonedDateTime.now(ZoneId.of("Asia/Jakarta")).format(ISO_FORMATTER);
+            log.info(BDITimestamp);
+            log.info("Process");
 
             // Generate HMAC using the JSON string
             String hmac = hmacService.generateHmac(secretKey, BDITimestamp, requestBody);
+            log.info(BDITimestamp);
 
             // Return response with provided and generated values
-            return ResponseEntity.ok(new HmacResponse("success", hmac, timestamp, null, requestBody));
+            return ResponseEntity.ok(new HmacResponse("success", hmac, BDITimestamp, null, requestBody));
         } catch (IllegalArgumentException e) {
             log.warn("Permintaan tidak valid: {}", e.getMessage());
             return ResponseEntity.badRequest()
