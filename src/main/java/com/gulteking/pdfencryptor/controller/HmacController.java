@@ -24,7 +24,8 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class HmacController {
 
-    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    private static final DateTimeFormatter ISO_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
     private final HmacService hmacService;
     private final ApiKeyValidator apiKeyValidator;
     private final ObjectMapper objectMapper;
@@ -40,14 +41,15 @@ public class HmacController {
             // Konversi JSON ke string untuk HMAC
             String requestBody = objectMapper.writeValueAsString(requestBodyJson);
 
-            // Generate timestamp in ISO 8601 format (WIB)
+            // Generate timestamp in ISO 8601 format without fractional seconds (WIB)
             String timestamp = ZonedDateTime.now(ZoneId.of("Asia/Jakarta")).format(ISO_FORMATTER);
+            log.info("BDI-Timestamp: {}", timestamp);
 
             // Generate HMAC using the JSON string
             String hmac = hmacService.generateHmac(secretKey, timestamp, requestBody);
 
-            // Return response with provided and generated values
-            return ResponseEntity.ok(new HmacResponse("success", hmac, timestamp, null, requestBody));
+            // Return response with provided JSON as object and generated values
+            return ResponseEntity.ok(new HmacResponse("success", hmac, timestamp, null, requestBodyJson));
         } catch (IllegalArgumentException e) {
             log.warn("Permintaan tidak valid: {}", e.getMessage());
             return ResponseEntity.badRequest()

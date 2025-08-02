@@ -1,5 +1,6 @@
 package com.gulteking.pdfencryptor.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Value;
 
 @Value
@@ -8,5 +9,5 @@ public class HmacResponse {
     String hmac;
     String timestamp;
     String errorMessage;
-    String requestBody; // To return the provided JSON as string
+    JsonNode requestBody; // Changed to JsonNode to return JSON object
 }
