@@ -1,7 +1,6 @@
 package com.gulteking.pdfencryptor.exception;
 
 public final class ExceptionMessages {
-
     private ExceptionMessages() {
         // Prevent instantiation
     }
@@ -14,4 +13,5 @@ public final class ExceptionMessages {
     public static final String VALIDATION_ERROR = "VALIDATION_ERROR";
     public static final String CONSTRAINT_VIOLATION = "CONSTRAINT_VIOLATION";
     public static final String INVALID_ARGUMENT = "INVALID_ARGUMENT";
+    public static final String PDF_PROCESSING_ERROR = "PDF_PROCESSING_ERROR";
 }

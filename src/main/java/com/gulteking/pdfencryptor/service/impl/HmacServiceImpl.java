@@ -42,7 +42,7 @@ public class HmacServiceImpl implements HmacService {
         try {
             ZonedDateTime requestTime = ZonedDateTime.parse(isoTimestamp, ISO_FORMATTER);
             ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-            if (Duration.between(requestTime, now).abs().toMinutes() > 5) {
+            if (Duration.between(requestTime, now).abs().toMinutes() > 2) {
                 throw new IllegalArgumentException("Timestamp di luar waktu yang diterima");
             }
         } catch (DateTimeParseException e) {

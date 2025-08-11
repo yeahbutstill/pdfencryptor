@@ -3,7 +3,6 @@ package com.gulteking.pdfencryptor.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gulteking.pdfencryptor.config.ApiKeyValidator;
 import com.gulteking.pdfencryptor.dto.HmacResponse;
 import com.gulteking.pdfencryptor.service.HmacService;
 import lombok.RequiredArgsConstructor;
@@ -14,29 +13,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/hmac")
 @RequiredArgsConstructor
 public class HmacController {
-
-    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     private final HmacService hmacService;
-    private final ApiKeyValidator apiKeyValidator;
+    //private final ApiKeyValidator apiKeyValidator;
     private final ObjectMapper objectMapper;
 
     @PostMapping("/generate")
     public ResponseEntity<HmacResponse> generateHmac(
-            @RequestHeader(value = "X-API-KEY") String apiKey,
+            //@RequestHeader(value = "X-API-KEY") String apiKey,
             @RequestHeader("X-SECRET-KEY") String secretKey,
             @RequestHeader("BDI-Timestamp") String BDITimestamp,
             @RequestBody JsonNode requestBodyJson) {
         try {
-            apiKeyValidator.validateApiKey(apiKey);
+            //apiKeyValidator.validateApiKey(apiKey);
 
             // Konversi JSON ke string untuk HMAC
             String requestBody = objectMapper.writeValueAsString(requestBodyJson);
